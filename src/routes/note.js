@@ -17,59 +17,45 @@ router.post('/', (req, res) => {
   		Your return object should be something similar to this:
       	{ id, text, dateCreated, lastModified }
   */
-      
+  const newText = req.body.text
 
-  //Your code here...
+  /*
 
-  // defining variables for storing values of text, date created, and last modified
-  const newText = req.body.text;
-  const dateCreated = new Date().toISOString().split('T')[0];
-  const lastModified = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+    Your code here...
 
-        
-  // query for inserting new note into the table
-  db.query(`INSERT INTO tb_notes (text, dateCreated, lastModified) VALUES (?, ?, ?)`, [newText, dateCreated, lastModified], function(err, results, fields) {
+    const newNote = {} // this is the response object, make sure to replace with actual value
 
-    if (err) {
-      
-      // Upon fail, run the following lines to respond with an error
-      console.log(err.message);
-      // --- begin of fail flow ---
-      res.status(500).send('Fail to insert');
-      // --- end of fail flow ---
 
-    }else{
 
-      // query to get values of the newly stored note from the database
-      db.query(`SELECT * FROM tb_notes WHERE id = ?`, results.insertId, function(err, returnedResult) {
+    // Upon succ, run the following lines to validate the response object and respond to client
 
-        if (err) {
+    // --- begin of succ flow ---
+    if (!validateNote(newNote)) {
+      res.status(500).send('Invalid data type')
+    }
+	  res.status(201).send({ newNote })
+    // --- end of succ flow ---
 
-          console.log(err.message);
-          res.status(500).send('Fail to query');
 
-        }else{
-            
-          // Upon succ, run the following lines to validate the response object and respond to client
 
-          // this is the response object, make sure to replace with actual value
-          const newNote = {id: returnedResult[0].id, text: returnedResult[0].text, dateCreated: returnedResult[0].dateCreated, lastModified: returnedResult[0].lastModified};          
-          
-          // --- begin of succ flow ---
-          if (!validateNote(newNote)) {
-            res.status(500).send('Invalid data type')
-          }     
-          res.status(201).send({ newNote })
-          // --- end of succ flow ---
+    // Upon fail, run the following lines to respond with an error
 
-        }
+    // --- begin of fail flow ---
+    res.status(500).send('Fail to insert')
+    // --- end of fail flow ---
+    
+  */
 
-      });
 
-    }  
 
-  });
-  
+  // TODO-4.1: Remove this section once you start working on TODO-4
+  // --- Remove section begins ---
+  const newNote = { id: 2, text: newText, dateCreated: new Date().toISOString().split('T')[0], lastModified: new Date().toISOString().split('T')[0] }
+  if (!validateNote(newNote)) {
+    res.status(500).send('Invalid data type')
+  }
+  res.status(201).send({ newNote })
+  // --- Remove section ends ---
 })
 /* -------------------------------------------------------------------------- */
 
@@ -89,58 +75,46 @@ router.put('/', (req, res) => {
 			Your return object should be something similar to this:
         { id, text, dateCreated, lastModified }
 	*/
-
-  // You code here...
-  
-  // defining variables for updating values of text and last modified
 	const noteId = req.body.id
-	const updatedText = req.body.text;
-  const lastModified = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+	const newText = req.body.text
 
-  // query for updating a note in the table based on noteId
-  db.query(`UPDATE tb_notes SET text = ?, lastModified = ? WHERE id = ?`, [updatedText, lastModified, noteId], function(err, result){
-    
-    if (err) {
+	/* 
 
-      // Upon fail, run the following lines to respond with an error
-      console.log(err);
-      // --- begin of fail flow ---
-      res.status(500).send('Fail to update')
-      // --- end of fail flow ---
+		// You code here...
 
-    }else{
-      
-      // query fetching all newly updated values for the updated note after successful updation to pass to the response object
-      db.query(`SELECT * FROM tb_notes WHERE id = ?`, noteId, function(err, returnedResult) {
+		const updatedNote = {} // this is the response object, make sure to replace with actual value
 
-        if (err) {
 
-          console.log(err.message);
-          res.status(500).send('Fail to query');
 
-        }else{
-          
-          // Upon succ, run the following lines to validate the response object and respond to client
+    // Upon succ, run the following lines to validate the response object and respond to client
 
-          // defining response object
-          const updatedNote = {id: returnedResult[0].id, text: returnedResult[0].text, dateCreated: returnedResult[0].dateCreated, lastModified: returnedResult[0].lastModified};          
-
-          // --- begin of succ flow ---
-          if (!validateNote(updatedNote)) {
-            res.status(500).send('Invalid data type');
-          }else{
-            res.send({ updatedNote });            
-          }
-          // --- end of succ flow ---
-
-        }
-
-      });
-
+    // --- begin of succ flow ---
+    if (!validateNote(updatedNote)) {
+      res.status(500).send('Invalid data type')
     }
+	  res.send({ updatedNote })
+    // --- end of succ flow ---
 
-  });
 
+
+    // Upon fail, run the following lines to respond with an error
+
+    // --- begin of fail flow ---
+    res.status(500).send('Fail to update')
+    // --- end of fail flow ---
+
+	*/
+
+
+
+		// TODO-5.1: Remove this section once you start working on TODO-5
+  	// --- Remove section begins ---
+  	const updatedNote = { id: noteId, text: newText, dateCreated: '2021-04-15', lastModified: new Date().toISOString().split('T')[0]}
+		if (!validateNote(updatedNote)) {
+      res.status(500).send('Invalid data type')
+    }
+  	res.send({ updatedNote })
+  	// --- Remove section ends ---
 })
 /* -------------------------------------------------------------------------- */
 
@@ -157,32 +131,34 @@ router.delete('/', (req, res) => {
 	*/
 	const noteId = req.body.id
 
+  /*
 
-  // Your code here...
+    // Your code here...
 
 
-  // query to delete the note with the give noteId from the table
-  db.query(`DELETE FROM tb_notes WHERE id = ?`, noteId, function(err, result) {
 
-    if (err){
+    // Upon succ, run the following lines to validate the response object and respond to client
 
-      // Upon fail, run the following lines to respond with an error
-      console.log(err);
-      // --- begin of fail flow ---
-      res.status(500).send('Fail to delete');
-      // --- end of fail flow ---      
+    // --- begin of succ flow ---
+    res.send()
+    // --- end of succ flow ---
 
-    }else{
 
-      // Upon succ, run the following lines to validate the response object and respond to client
-      // --- begin of succ flow ---
-      res.send();
-      // --- end of succ flow ---
 
-    }         
+    // Upon fail, run the following lines to respond with an error
 
-  });
-    
+    // --- begin of fail flow ---
+    res.status(500).send('Fail to delete')
+    // --- end of fail flow ---
+
+  */
+
+
+
+  // TODO-6.1: Remove this section once you start working on TODO-6
+  // --- Remove section begins ---
+  res.send()
+  // --- Remove section ends ---
 })
 /* -------------------------------------------------------------------------- */
 
